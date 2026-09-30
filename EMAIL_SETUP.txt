@@ -14,3 +14,4 @@ Important:
 - Customer must enter a valid email address at checkout.
 - Email is sent only when the order changes into Confirmed.
 - If the email service is not configured, the order will still become Confirmed; the email is simply skipped.
+email confirmation setup
