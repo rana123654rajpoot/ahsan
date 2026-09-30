@@ -1,0 +1,16 @@
+AL NAFAY - AUTOMATIC ORDER CONFIRMATION EMAIL
+
+This version sends an automatic confirmation email when an Admin changes an order from Pending to Confirmed.
+
+One-time Netlify setup:
+1. Create a Resend account and verify the sender/domain you want to use.
+2. In Netlify: Site configuration -> Environment variables.
+3. Add:
+   RESEND_API_KEY = your Resend API key
+   RESEND_FROM_EMAIL = AL NAFAY <your-verified-email-or-domain>
+4. Redeploy the site.
+
+Important:
+- Customer must enter a valid email address at checkout.
+- Email is sent only when the order changes into Confirmed.
+- If the email service is not configured, the order will still become Confirmed; the email is simply skipped.
