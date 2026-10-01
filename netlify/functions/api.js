@@ -63,43 +63,52 @@ const validCookie = (req) => {
   return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(sign(exp)));
 };
 const adminOnly = (req) => validCookie(req);
-const esc = (v) => text(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const resendFrom = () => {
-  const from = text(process.env.RESEND_FROM_EMAIL).trim();
-  // Resend cannot send from free mailbox domains (gmail.com etc.) — fall back to its test sender.
-  if (!from || /@(gmail|yahoo|hotmail|outlook|live|icloud)\.com>?$/i.test(from)) return 'AL NAFAY <onboarding@resend.dev>';
-  return from;
-};
-const sendConfirmationEmail = async (row) => {
-  const apiKey = process.env.RESEND_API_KEY;
-  const to = text(row.email).trim();
-  if (!apiKey) { console.log('Email skipped: RESEND_API_KEY not set'); return { sent:false, reason:'not_configured' }; }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) { console.log(`Email skipped for order ${row.id}: no valid customer email`); return { sent:false, reason:'no_email' }; }
-  let items = [];
-  try { items = JSON.parse(row.items || '[]'); } catch {}
-  const lines = items.map(i => `<tr><td>${esc(i.product)}${i.tone?' ('+esc(i.tone)+')':''}${i.option?' - '+esc(i.option):''}</td><td align="center">${i.quantity}</td><td align="right">Rs ${Number(i.unit_price*i.quantity).toLocaleString()}</td></tr>`).join('');
-  const html = `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto">
-<h2>AL NAFAY - Order Confirmed</h2>
-<p>Dear ${esc(row.name)},</p>
-<p>Your order <b>#${row.id}</b> has been confirmed. Thank you for shopping with AL NAFAY!</p>
-<table width="100%" cellpadding="6" style="border-collapse:collapse;border:1px solid #ddd">
-<tr style="background:#f5f5f5"><th align="left">Item</th><th>Qty</th><th align="right">Amount</th></tr>${lines}
-<tr><td colspan="2"><b>Total</b></td><td align="right"><b>Rs ${Number(row.total).toLocaleString()}</b></td></tr></table>
-<p>Delivery to: ${esc(row.address)}${row.city?', '+esc(row.city):''}<br>Phone: ${esc(row.phone)}</p>
-<p>Regards,<br>AL NAFAY</p></div>`;
-  try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method:'POST',
-      headers:{ Authorization:`Bearer ${apiKey}`, 'Content-Type':'application/json' },
-      body: JSON.stringify({ from: resendFrom(), to:[to], subject:`Your AL NAFAY order #${row.id} is confirmed`, html })
-    });
-    const body = await res.text();
-    if (!res.ok) { console.error(`Resend error for order ${row.id} (${res.status}): ${body}`); return { sent:false, reason:'provider_error', status:res.status, detail:body.slice(0,300) }; }
-    console.log(`Confirmation email sent for order ${row.id}`);
-    return { sent:true };
-  } catch (e) { console.error(`Email send failed for order ${row.id}:`, e); return { sent:false, reason:'network_error' }; }
-};
 const bad = (message,status=404) => json({error:message},status);
+const escHtml = (v) => text(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sendOrderEmail = async (order, type) => {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.RESEND_FROM_EMAIL;
+  const recipient = text(order.email).trim();
+  if (!apiKey || !from || !recipient.includes('@')) return { sent:false, skipped:true };
+
+  const items = (() => { try { return JSON.parse(order.items || '[]'); } catch { return []; } })();
+  const rows = items.length
+    ? items.map(i => `<tr><td style="padding:8px;border-bottom:1px solid #e5e7eb">${escHtml(i.product)}<br><small>${escHtml(i.option || '')}</small></td><td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:center">${Number(i.quantity)||1}</td><td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:right">Rs. ${Number(i.unit_price||0).toLocaleString('en-PK')}</td></tr>`).join('')
+    : `<tr><td colspan="3" style="padding:8px">${escHtml(order.product)} — ${escHtml(order.option)}</td></tr>`;
+
+  const messages = {
+    placed: {
+      subject: `AL NAFAY Order #${order.id} Received`,
+      title: 'Your Order Has Been Placed',
+      intro: `Your AL NAFAY order <b>#${order.id}</b> has been received successfully.`,
+      closing: 'We have received your order and will contact you when it is confirmed.'
+    },
+    confirmed: {
+      subject: `AL NAFAY Order #${order.id} Confirmed`,
+      title: 'Your Order Has Been Confirmed',
+      intro: `Your AL NAFAY order <b>#${order.id}</b> has been confirmed successfully.`,
+      closing: 'Your order will now be processed for delivery. We will contact you if any further information is needed.'
+    },
+    completed: {
+      subject: `AL NAFAY Order #${order.id} Completed`,
+      title: 'Your Order Has Been Completed',
+      intro: `Your AL NAFAY order <b>#${order.id}</b> has been completed.`,
+      closing: 'Thank you for shopping with AL NAFAY.'
+    },
+    cancelled: {
+      subject: `AL NAFAY Order #${order.id} Cancelled`,
+      title: 'Your Order Has Been Cancelled',
+      intro: `Your AL NAFAY order <b>#${order.id}</b> has been cancelled.`,
+      closing: 'If you have any questions about this cancellation, please contact AL NAFAY.'
+    }
+  };
+  const m = messages[type] || messages.confirmed;
+  const html = `<!doctype html><html><body style="margin:0;background:#f3f7f6;font-family:Arial,sans-serif;color:#123638"><div style="max-width:650px;margin:30px auto;background:#fff;border:1px solid #d7e8e4"><div style="background:#042f32;color:#fff;padding:28px;text-align:center"><div style="font-size:25px;letter-spacing:3px;font-weight:700">AL NAFAY</div><div style="margin-top:6px;color:#d6ffcb">GENTS UNSTITCHED</div></div><div style="padding:30px"><h2 style="margin-top:0">${m.title}</h2><p>Assalam-o-Alaikum ${escHtml(order.name)},</p><p>${m.intro}</p><table style="width:100%;border-collapse:collapse;margin:22px 0"><thead><tr><th style="padding:8px;text-align:left;background:#f3f7f6">Product</th><th style="padding:8px;background:#f3f7f6">Qty</th><th style="padding:8px;text-align:right;background:#f3f7f6">Price</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td colspan="2" style="padding:12px 8px;font-weight:700">Total Amount</td><td style="padding:12px 8px;text-align:right;font-weight:700">Rs. ${Number(order.total||0).toLocaleString('en-PK')}</td></tr></tfoot></table><p><b>Delivery City:</b> ${escHtml(order.city)}</p><p><b>Delivery Address:</b> ${escHtml(order.address)}</p>${order.note?`<p><b>Order Note:</b> ${escHtml(order.note)}</p>`:''}<p>${m.closing}</p><p style="margin-top:28px"><b>AL NAFAY</b><br>Quality · Comfort · Style</p></div></div></body></html>`;
+  const r = await fetch('https://api.resend.com/emails', {method:'POST', headers:{'Authorization':`Bearer ${apiKey}`,'Content-Type':'application/json'}, body:JSON.stringify({from,to:[recipient],subject:m.subject,html})});
+  if (!r.ok) { let detail='Email service error'; try { const e=await r.json(); detail=e.message||detail; } catch {} throw new Error(detail); }
+  return { sent:true };
+};
+
 
 export default async (req) => {
   const url = new URL(req.url);
@@ -160,7 +169,10 @@ export default async (req) => {
       const qty = clean.reduce((a,i)=>a+i.quantity,0);
       const id = await nextId('orders');
       const row = {id,created_at:now(),product_id:clean[0].product_id,product:[...new Set(clean.map(i=>i.product))].join(', '),tone:clean[0].tone,option:clean.length===1?clean[0].option:'',unit_price:clean.length===1?clean[0].unit_price:0,quantity:qty,total,name,email:text(d.email),phone,city:text(d.city),address:text(d.address),note:text(d.note),status:'Pending',items:JSON.stringify(clean)};
-      await s.setJSON(key('orders',id),row); return json(row,201);
+      await s.setJSON(key('orders',id),row);
+      let email = {sent:false, skipped:true};
+      try { email = await sendOrderEmail(row, 'placed'); } catch (e) { email = {sent:false, skipped:false, error:text(e.message)}; }
+      return json({...row, email},201);
     }
     if (!adminOnly(req)) return json({error:'Login required'},401);
     if (method === 'GET' && !idPart) return json((await listAll('orders')).reverse());
@@ -169,10 +181,16 @@ export default async (req) => {
       if (!ORDER_STATUSES.includes(status)) return bad('Invalid status',400);
       const row = await s.get(key('orders',id),{type:'json'});
       if (!row) return bad('Order not found',404);
-      const wasConfirmed = row.status === 'Confirmed';
-      row.status = status; await s.setJSON(key('orders',id),row);
-      const email = status === 'Confirmed' && !wasConfirmed ? await sendConfirmationEmail(row) : undefined;
-      return json(email ? { ...row, email_result: email } : row);
+      const previousStatus = row.status;
+      row.status = status;
+      await s.setJSON(key('orders',id),row);
+      let email = {sent:false, skipped:true};
+      const emailType = status === 'Confirmed' ? 'confirmed' : status === 'Completed' ? 'completed' : status === 'Cancelled' ? 'cancelled' : null;
+      if (emailType && previousStatus !== status) {
+        try { email = await sendOrderEmail(row, emailType); }
+        catch (e) { email = {sent:false, skipped:false, error:text(e.message)}; }
+      }
+      return json({...row, email});
     }
   }
 
