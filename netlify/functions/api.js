@@ -185,23 +185,34 @@ export default async (req) => {
       if (!ORDER_STATUSES.includes(status)) return bad('Invalid status',400);
       const row = await s.get(key('orders',id),{type:'json'});
       if (!row) return bad('Order not found',404);
-      const previousStatus = row.status;
-      row.status = status;
-      await s.setJSON(key('orders',id),row);
-      let email = {sent:false, skipped:true};
+      const previousStatus = text(row.status) || 'Pending';
       const emailType = status === 'Confirmed' ? 'confirmed' : status === 'Completed' ? 'completed' : status === 'Cancelled' ? 'cancelled' : null;
       const sentField = emailType ? `email_${emailType}_sent_at` : null;
-      // Send on a real status change, or retry a status email that was never successfully sent.
-      // This also fixes older orders that were confirmed before the email feature was working.
-      const shouldSend = !!emailType && (previousStatus !== status || !row[sentField]);
+      let email = {sent:false, skipped:true, status:'skipped'};
+
+      // Save the new status first, then explicitly send the matching status email.
+      // Confirmed is intentionally handled as its own transition so it cannot be
+      // swallowed by the Completed/Cancelled branches. A failed send can be retried
+      // by selecting the same status again.
+      row.status = status;
+      await s.setJSON(key('orders',id),row);
+
+      const shouldSend = !!emailType && (!row[sentField] || previousStatus !== status);
       if (shouldSend) {
         try {
           email = await sendOrderEmail(row, emailType);
           if (email.sent) {
             row[sentField] = now();
+            email.status = 'sent';
             await s.setJSON(key('orders',id),row);
+          } else if (email.skipped) {
+            email.status = 'skipped';
           }
-        } catch (e) { email = {sent:false, skipped:false, error:text(e.message)}; }
+        } catch (e) {
+          email = {sent:false, skipped:false, status:'error', error:text(e.message)};
+        }
+      } else if (emailType) {
+        email = {sent:false, skipped:true, status:'already_sent'};
       }
       return json({...row, email});
     }
