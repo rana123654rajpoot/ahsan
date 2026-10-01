@@ -171,7 +171,11 @@ export default async (req) => {
       const row = {id,created_at:now(),product_id:clean[0].product_id,product:[...new Set(clean.map(i=>i.product))].join(', '),tone:clean[0].tone,option:clean.length===1?clean[0].option:'',unit_price:clean.length===1?clean[0].unit_price:0,quantity:qty,total,name,email:text(d.email),phone,city:text(d.city),address:text(d.address),note:text(d.note),status:'Pending',items:JSON.stringify(clean)};
       await s.setJSON(key('orders',id),row);
       let email = {sent:false, skipped:true};
-      try { email = await sendOrderEmail(row, 'placed'); } catch (e) { email = {sent:false, skipped:false, error:text(e.message)}; }
+      try {
+        email = await sendOrderEmail(row, 'placed');
+        if (email.sent) row.email_placed_sent_at = now();
+      } catch (e) { email = {sent:false, skipped:false, error:text(e.message)}; }
+      await s.setJSON(key('orders',id),row);
       return json({...row, email},201);
     }
     if (!adminOnly(req)) return json({error:'Login required'},401);
@@ -186,9 +190,18 @@ export default async (req) => {
       await s.setJSON(key('orders',id),row);
       let email = {sent:false, skipped:true};
       const emailType = status === 'Confirmed' ? 'confirmed' : status === 'Completed' ? 'completed' : status === 'Cancelled' ? 'cancelled' : null;
-      if (emailType && previousStatus !== status) {
-        try { email = await sendOrderEmail(row, emailType); }
-        catch (e) { email = {sent:false, skipped:false, error:text(e.message)}; }
+      const sentField = emailType ? `email_${emailType}_sent_at` : null;
+      // Send on a real status change, or retry a status email that was never successfully sent.
+      // This also fixes older orders that were confirmed before the email feature was working.
+      const shouldSend = !!emailType && (previousStatus !== status || !row[sentField]);
+      if (shouldSend) {
+        try {
+          email = await sendOrderEmail(row, emailType);
+          if (email.sent) {
+            row[sentField] = now();
+            await s.setJSON(key('orders',id),row);
+          }
+        } catch (e) { email = {sent:false, skipped:false, error:text(e.message)}; }
       }
       return json({...row, email});
     }
