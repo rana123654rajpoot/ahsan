@@ -63,6 +63,42 @@ const validCookie = (req) => {
   return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(sign(exp)));
 };
 const adminOnly = (req) => validCookie(req);
+const esc = (v) => text(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const resendFrom = () => {
+  const from = text(process.env.RESEND_FROM_EMAIL).trim();
+  // Resend cannot send from free mailbox domains (gmail.com etc.) — fall back to its test sender.
+  if (!from || /@(gmail|yahoo|hotmail|outlook|live|icloud)\.com>?$/i.test(from)) return 'AL NAFAY <onboarding@resend.dev>';
+  return from;
+};
+const sendConfirmationEmail = async (row) => {
+  const apiKey = process.env.RESEND_API_KEY;
+  const to = text(row.email).trim();
+  if (!apiKey) { console.log('Email skipped: RESEND_API_KEY not set'); return { sent:false, reason:'not_configured' }; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) { console.log(`Email skipped for order ${row.id}: no valid customer email`); return { sent:false, reason:'no_email' }; }
+  let items = [];
+  try { items = JSON.parse(row.items || '[]'); } catch {}
+  const lines = items.map(i => `<tr><td>${esc(i.product)}${i.tone?' ('+esc(i.tone)+')':''}${i.option?' - '+esc(i.option):''}</td><td align="center">${i.quantity}</td><td align="right">Rs ${Number(i.unit_price*i.quantity).toLocaleString()}</td></tr>`).join('');
+  const html = `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto">
+<h2>AL NAFAY - Order Confirmed</h2>
+<p>Dear ${esc(row.name)},</p>
+<p>Your order <b>#${row.id}</b> has been confirmed. Thank you for shopping with AL NAFAY!</p>
+<table width="100%" cellpadding="6" style="border-collapse:collapse;border:1px solid #ddd">
+<tr style="background:#f5f5f5"><th align="left">Item</th><th>Qty</th><th align="right">Amount</th></tr>${lines}
+<tr><td colspan="2"><b>Total</b></td><td align="right"><b>Rs ${Number(row.total).toLocaleString()}</b></td></tr></table>
+<p>Delivery to: ${esc(row.address)}${row.city?', '+esc(row.city):''}<br>Phone: ${esc(row.phone)}</p>
+<p>Regards,<br>AL NAFAY</p></div>`;
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method:'POST',
+      headers:{ Authorization:`Bearer ${apiKey}`, 'Content-Type':'application/json' },
+      body: JSON.stringify({ from: resendFrom(), to:[to], subject:`Your AL NAFAY order #${row.id} is confirmed`, html })
+    });
+    const body = await res.text();
+    if (!res.ok) { console.error(`Resend error for order ${row.id} (${res.status}): ${body}`); return { sent:false, reason:'provider_error', status:res.status, detail:body.slice(0,300) }; }
+    console.log(`Confirmation email sent for order ${row.id}`);
+    return { sent:true };
+  } catch (e) { console.error(`Email send failed for order ${row.id}:`, e); return { sent:false, reason:'network_error' }; }
+};
 const bad = (message,status=404) => json({error:message},status);
 
 export default async (req) => {
@@ -133,7 +169,10 @@ export default async (req) => {
       if (!ORDER_STATUSES.includes(status)) return bad('Invalid status',400);
       const row = await s.get(key('orders',id),{type:'json'});
       if (!row) return bad('Order not found',404);
-      row.status = status; await s.setJSON(key('orders',id),row); return json(row);
+      const wasConfirmed = row.status === 'Confirmed';
+      row.status = status; await s.setJSON(key('orders',id),row);
+      const email = status === 'Confirmed' && !wasConfirmed ? await sendConfirmationEmail(row) : undefined;
+      return json(email ? { ...row, email_result: email } : row);
     }
   }
 
