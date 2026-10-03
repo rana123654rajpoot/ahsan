@@ -61,39 +61,6 @@ input,textarea{width:100%;border:1.5px solid var(--ln);border-radius:11px;paddin
 .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--d);color:#fff;padding:11px 20px;border-radius:24px;z-index:60;font-weight:500;box-shadow:0 8px 24px #0004}
 .empty{text-align:center;padding:50px 24px;color:var(--mu)}
 .tabs{display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:8px}.tabs button{flex:1;padding:11px;border-radius:9px;font-weight:600;color:var(--mu)}.tabs button.on{background:#fff;color:var(--d);box-shadow:0 1px 4px #0002}
-
-/* ORDER CONFIRMED SCREEN */
-.dn{position:relative;overflow:hidden;text-align:center;padding:34px 20px 28px;background:radial-gradient(circle at 50% 0,#0b6b68 0,#064B4A 55%,#04393a 100%);color:#fff;border-radius:0 0 34px 34px}
-.dn-badge{position:relative;width:104px;height:104px;margin:8px auto 18px;display:grid;place-items:center}
-.dn-badge:before,.dn-badge:after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #1FBF8F;opacity:0;animation:dnRing 2.4s ease-out infinite}
-.dn-badge:after{animation-delay:1.2s}
-.dn-circle{width:84px;height:84px;border-radius:50%;background:linear-gradient(145deg,#2fe0ac,#1FBF8F);display:grid;place-items:center;box-shadow:0 10px 30px #1fbf8f66,0 0 0 8px #ffffff14;animation:dnPop .7s cubic-bezier(.2,1.4,.4,1) both}
-.dn-circle svg{width:44px;height:44px}
-.dn-circle path{stroke-dasharray:40;stroke-dashoffset:40;animation:dnDraw .6s .45s ease forwards}
-.dn h2{font:700 30px/1.1 "Cormorant Garamond",serif;margin:0 0 8px;letter-spacing:.3px;animation:dnUp .6s .5s both}
-.dn p{margin:0 auto;max-width:300px;color:#cfe9e2;font-size:13.5px;animation:dnUp .6s .65s both}
-.dn-conf{position:absolute;top:-12px;width:8px;height:14px;border-radius:2px;opacity:0;animation:dnFall 3.2s ease-in forwards}
-.dn-body{padding:0 18px 20px;margin-top:-18px;position:relative}
-.dn-card{background:#fff;border:1px solid var(--ln);border-radius:20px;padding:16px;box-shadow:0 14px 34px #064b4a1f;animation:dnUp .6s .8s both}
-.dn-lbl{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--mu);text-align:center}
-.dn-ids{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 14px}
-.dn-id{background:linear-gradient(135deg,#e9f8f1,#d5f3e5);color:var(--d);font-weight:700;font-size:17px;padding:8px 18px;border-radius:999px;border:1px dashed #1FBF8F}
-.dn-steps{display:flex;justify-content:space-between;position:relative;margin-top:6px;padding-top:4px}
-.dn-steps:before{content:"";position:absolute;left:12%;right:12%;top:17px;height:2px;background:var(--ln)}
-.dn-st{position:relative;flex:1;text-align:center;font-size:11px;color:var(--mu)}
-.dn-st i{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;margin:0 auto 6px;background:#fff;border:2px solid var(--ln);font-style:normal;font-size:12px;color:var(--mu);position:relative}
-.dn-st.on{color:var(--d);font-weight:600}
-.dn-st.on i{background:var(--m);border-color:var(--m);color:#fff}
-.dn-st.now i{animation:dnBeat 1.6s ease-in-out infinite}
-.dn-note{margin-top:14px;text-align:center;font-size:12.5px;color:var(--mu)}
-.dn-btn{display:grid;gap:10px;margin-top:16px;animation:dnUp .6s .95s both}
-@keyframes dnPop{0%{transform:scale(0) rotate(-40deg)}100%{transform:scale(1) rotate(0)}}
-@keyframes dnDraw{to{stroke-dashoffset:0}}
-@keyframes dnRing{0%{transform:scale(.7);opacity:.7}100%{transform:scale(1.7);opacity:0}}
-@keyframes dnUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@keyframes dnBeat{0%,100%{box-shadow:0 0 0 0 #1fbf8f66}50%{box-shadow:0 0 0 7px #1fbf8f00}}
-@keyframes dnFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(340px) rotate(540deg)}}
-@media (prefers-reduced-motion:reduce){.dn *,.dn-badge:before,.dn-badge:after{animation:none!important}.dn-circle path{stroke-dashoffset:0}}
 </style></head><body>
 <div id="app">
 <header><button class="ib" data-m="1" aria-label="Menu" id="hm"></button><div class="logo" data-go="#/shop"><b id="lg"></b><small>PREMIUM UNSTITCHED FABRICS</small></div><div style="display:flex"><button class="ib" data-s="1" aria-label="Search" id="hs"></button><button class="ib" data-go="#/cart" aria-label="Cart" id="hc"></button></div></header>
@@ -144,7 +111,7 @@ function checkV(){if(!CK.length)return `<div class="empty">Nothing to order yet.
 return `<div class="pad"><h2>Checkout</h2>${CK.map(c=>`<div class="ci"><img src="${esc(thumb(c.id))}" alt=""><div><b>${esc(c.name)}</b><div class="sku">${esc(c.opt)} · Qty ${c.qty}</div><div style="font-weight:600">${money(c.unit*c.qty)}</div></div></div>`).join('')}<div class="tot"><span>Total</span><span>${money(t)}</span></div>
 <form id="of"><label>Full Name</label><input id="on" required value="${esc(u.name||'')}"><label>Phone / WhatsApp</label><input id="op" type="tel" required><label>Email (optional)</label><input id="oe" type="email"><label>City</label><input id="oc" required><label>Delivery Address</label><textarea id="oa" rows="2" required></textarea><label>Order Note (optional)</label><textarea id="ot" rows="2"></textarea>
 <button class="b f" style="width:100%;margin-top:16px" id="ob">Place Order</button><div class="msg e" id="om"></div></form></div>`}
-function doneV(){const cl=['#1FBF8F','#BDF0D5','#f5d68a','#ffffff','#7be3c3'];const cf=Array.from({length:22},(_,k)=>`<span class="dn-conf" style="left:${(k*4.7+3)%98}%;background:${cl[k%5]};animation-delay:${(k%7)*.18+.3}s;transform:rotate(${k*23}deg)"></span>`).join('');return `<div class="dn">${cf}<div class="dn-badge"><div class="dn-circle"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div></div><h2>Order Confirmed</h2><p>Thank you for shopping with AL NAFAY. Your order has been received.</p></div><div class="dn-body"><div class="dn-card"><div class="dn-lbl">Your Order No</div><div class="dn-ids">${DONE.map(i=>'<span class="dn-id">#'+i+'</span>').join('')}</div><div class="dn-steps"><div class="dn-st on now"><i>&#10003;</i>Placed</div><div class="dn-st"><i>2</i>Confirmed</div><div class="dn-st"><i>3</i>Packed</div><div class="dn-st"><i>4</i>Delivered</div></div><div class="dn-note">We will contact you to confirm delivery.</div></div><div class="dn-btn"><button class="b f" data-go="#/shop">Continue Shopping</button></div></div>`}
+function doneV(){return `<div class="pad" style="text-align:center"><div class="ok">${I('check',38)}</div><h2>Order Confirmed</h2><p>Your order has been received. We will contact you to confirm delivery.</p><p><b>Order No: ${DONE.map(i=>'#'+i).join(', ')}</b></p><div style="display:grid;gap:10px;margin-top:18px"><button class="b f" data-go="#/shop">Continue Shopping</button></div></div>`}
 function acctV(){const u=user();if(u)return `<div class="pad"><h2>Welcome, ${esc(u.name)}</h2><p>${esc(u.id)}</p><div style="display:grid;gap:10px;margin-top:16px"><button class="b" data-go="#/cart">My Cart</button><button class="b" data-go="#/contact">Contact Us</button><button class="b f" data-lo="1">Logout</button></div></div>`;
 return `<div class="pad"><h2>My Account</h2><div class="tabs"><button class="${AT=='login'?'on':''}" data-at="login">Login</button><button class="${AT=='signup'?'on':''}" data-at="signup">Sign Up</button></div><form id="af">${AT=='signup'?'<label>Full Name</label><input id="an" required>':''}<label>Email or Phone</label><input id="ai" required><label>Password</label><input id="ap" type="password" required><button class="b f" style="width:100%;margin-top:16px">${AT=='login'?'Login':'Create Account'}</button><div class="msg" id="am"></div></form></div>`}
 function infoV(k){const ph=S.phone||'',wa=(S.wa||'').replace(/\D/g,''),ig=S.ig||'';

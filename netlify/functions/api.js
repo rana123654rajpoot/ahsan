@@ -2,7 +2,7 @@ import { getStore } from '@netlify/blobs';
 import crypto from 'node:crypto';
 
 const ORDER_STATUSES = ['Pending', 'Confirmed', 'Completed', 'Cancelled'];
-const DEFAULT_SETTINGS = { id: 1, name: 'AL NAFAY', tagline: 'Quality · Comfort · Style', wa: '', phone: '', ig: '' };
+const DEFAULT_SETTINGS = { id: 1, name: 'AL NAFAY', tagline: 'Quality · Comfort · Style', wa: '', phone: '', ig: '', email: '', owner: '', about_title: 'About AL NAFAY', about_text: 'Premium gents unstitched fabrics with quality, comfort and style.', location: '', address: '', hours: '' };
 const DEFAULT_PASSWORD = process.env.ALNAFAY_ADMIN_PASSWORD || 'ALNAFAY2026';
 const SEED_PRODUCT = {
   name: 'Premium Black', code: 'AN-SC-BLK-001', fabric: 'Premium Gents Unstitched', color: 'Black',
@@ -171,11 +171,7 @@ export default async (req) => {
       const row = {id,created_at:now(),product_id:clean[0].product_id,product:[...new Set(clean.map(i=>i.product))].join(', '),tone:clean[0].tone,option:clean.length===1?clean[0].option:'',unit_price:clean.length===1?clean[0].unit_price:0,quantity:qty,total,name,email:text(d.email),phone,city:text(d.city),address:text(d.address),note:text(d.note),status:'Pending',items:JSON.stringify(clean)};
       await s.setJSON(key('orders',id),row);
       let email = {sent:false, skipped:true};
-      try {
-        email = await sendOrderEmail(row, 'placed');
-        if (email.sent) row.email_placed_sent_at = now();
-      } catch (e) { email = {sent:false, skipped:false, error:text(e.message)}; }
-      await s.setJSON(key('orders',id),row);
+      try { email = await sendOrderEmail(row, 'placed'); } catch (e) { email = {sent:false, skipped:false, error:text(e.message)}; }
       return json({...row, email},201);
     }
     if (!adminOnly(req)) return json({error:'Login required'},401);
@@ -185,34 +181,14 @@ export default async (req) => {
       if (!ORDER_STATUSES.includes(status)) return bad('Invalid status',400);
       const row = await s.get(key('orders',id),{type:'json'});
       if (!row) return bad('Order not found',404);
-      const previousStatus = text(row.status) || 'Pending';
-      const emailType = status === 'Confirmed' ? 'confirmed' : status === 'Completed' ? 'completed' : status === 'Cancelled' ? 'cancelled' : null;
-      const sentField = emailType ? `email_${emailType}_sent_at` : null;
-      let email = {sent:false, skipped:true, status:'skipped'};
-
-      // Save the new status first, then explicitly send the matching status email.
-      // Confirmed is intentionally handled as its own transition so it cannot be
-      // swallowed by the Completed/Cancelled branches. A failed send can be retried
-      // by selecting the same status again.
+      const previousStatus = row.status;
       row.status = status;
       await s.setJSON(key('orders',id),row);
-
-      const shouldSend = !!emailType && (!row[sentField] || previousStatus !== status);
-      if (shouldSend) {
-        try {
-          email = await sendOrderEmail(row, emailType);
-          if (email.sent) {
-            row[sentField] = now();
-            email.status = 'sent';
-            await s.setJSON(key('orders',id),row);
-          } else if (email.skipped) {
-            email.status = 'skipped';
-          }
-        } catch (e) {
-          email = {sent:false, skipped:false, status:'error', error:text(e.message)};
-        }
-      } else if (emailType) {
-        email = {sent:false, skipped:true, status:'already_sent'};
+      let email = {sent:false, skipped:true};
+      const emailType = status === 'Confirmed' ? 'confirmed' : status === 'Completed' ? 'completed' : status === 'Cancelled' ? 'cancelled' : null;
+      if (emailType && previousStatus !== status) {
+        try { email = await sendOrderEmail(row, emailType); }
+        catch (e) { email = {sent:false, skipped:false, error:text(e.message)}; }
       }
       return json({...row, email});
     }
@@ -236,7 +212,7 @@ export default async (req) => {
     if (!adminOnly(req)) return json({error:'Login required'},401);
     if (method === 'POST') {
       const d = await readJson(req);
-      const row = {id:1,name:text(d.name)||DEFAULT_SETTINGS.name,tagline:text(d.tagline)||DEFAULT_SETTINGS.tagline,wa:text(d.wa),phone:text(d.phone),ig:text(d.ig)};
+      const row = {id:1,name:text(d.name)||DEFAULT_SETTINGS.name,tagline:text(d.tagline)||DEFAULT_SETTINGS.tagline,wa:text(d.wa),phone:text(d.phone),ig:text(d.ig),email:text(d.email),owner:text(d.owner),about_title:text(d.about_title)||DEFAULT_SETTINGS.about_title,about_text:text(d.about_text)||DEFAULT_SETTINGS.about_text,location:text(d.location),address:text(d.address),hours:text(d.hours)};
       await s.setJSON('settings',row); return json(row);
     }
   }

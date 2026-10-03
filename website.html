@@ -61,31 +61,7 @@ input,textarea{width:100%;border:1.5px solid var(--ln);border-radius:11px;paddin
 .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--d);color:#fff;padding:11px 20px;border-radius:24px;z-index:60;font-weight:500;box-shadow:0 8px 24px #0004}
 .empty{text-align:center;padding:50px 24px;color:var(--mu)}
 .tabs{display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:8px}.tabs button{flex:1;padding:11px;border-radius:9px;font-weight:600;color:var(--mu)}.tabs button.on{background:#fff;color:var(--d);box-shadow:0 1px 4px #0002}
-
-/* --- motion layer --- */
-header{transition:box-shadow .3s}header.sc{box-shadow:0 6px 18px #0004}
-#v:empty{min-height:70vh;background:linear-gradient(100deg,#e3ebe9 30%,#f4f8f7 50%,#e3ebe9 70%) 0 0/200% 100%;animation:shim 1.4s linear infinite;border-radius:16px;margin:12px}
-@keyframes shim{to{background-position:-200% 0}}
-.list .pic{overflow:hidden}.list .pic img{transition:transform .6s ease}
-@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.55)}100%{transform:scale(1)}}
-@media(prefers-reduced-motion:no-preference){
-#v.enter .hero small{animation:fu .8s cubic-bezier(.2,.7,.2,1) .05s both}
-#v.enter .hero h1{animation:fu .9s cubic-bezier(.2,.7,.2,1) .18s both}
-#v.enter .hero p{animation:fu .9s cubic-bezier(.2,.7,.2,1) .34s both}
-.rv{opacity:0;transform:translateY(14px)}
-.rv.in{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
-.badge.pop{animation:pop .45s ease}
-#v.enter .pad>*{animation:fu .6s cubic-bezier(.2,.7,.2,1) both}
-#v.enter .pad>*:nth-child(2){animation-delay:.07s}#v.enter .pad>*:nth-child(3){animation-delay:.14s}#v.enter .pad>*:nth-child(4){animation-delay:.21s}#v.enter .pad>*:nth-child(5){animation-delay:.28s}#v.enter .pad>*:nth-child(n+6){animation-delay:.35s}
-#v.enter .ok{animation:okp .7s cubic-bezier(.3,1.5,.5,1) .1s both}
-@keyframes okp{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
-}
-input,textarea{transition:border-color .2s,box-shadow .2s}input:focus,textarea:focus{box-shadow:0 0 0 4px #1fbf8f26}
-.b{transition:transform .15s,background .2s}.b:active{transform:scale(.97)}
-.tabs button{transition:background .25s,color .25s,box-shadow .25s}
-@media(hover:hover){.list .card:hover .pic img{transform:scale(1.05)}}
-</style></head><body>
+</style><style id="ALNAFAY_ACCOUNT_ABOUT_V1">.account-card{margin-top:14px;border:1px solid var(--ln);border-radius:20px;background:linear-gradient(145deg,#f7fffb,#fff);padding:18px;box-shadow:0 10px 30px #064b4a12}.account-mail{display:flex;align-items:center;gap:12px;padding:13px;border-radius:14px;background:var(--d);color:#fff;margin:14px 0}.account-mail .mail-icon{width:42px;height:42px;border-radius:12px;background:var(--ml);color:var(--d);display:grid;place-items:center;font-size:21px}.account-mail small{display:block;color:#cce7df;font-size:10px;letter-spacing:1.4px;text-transform:uppercase}.account-mail b{display:block;margin-top:2px;font-size:14px;word-break:break-word}.about-hero{background:linear-gradient(145deg,var(--d),#0b6a62);color:#fff;border-radius:20px;padding:22px;margin:16px}.about-hero h2{margin:0 0 6px;font:700 30px 'Cormorant Garamond',Georgia,serif}.about-hero p{margin:4px 0;color:#d9f2ea}.about-grid{display:grid;gap:10px;padding:0 16px 16px}.about-info{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--ln);border-radius:15px;padding:12px;background:#fff}.about-info .ai{width:38px;height:38px;border-radius:11px;background:var(--ml);color:var(--d);display:grid;place-items:center;flex:none}.about-info b{display:block;font-size:12px;color:var(--mu);margin-bottom:2px}.about-info div:last-child{word-break:break-word}.about-copy{padding:0 16px 8px;color:var(--mu);white-space:pre-line}.about-owner{padding:0 16px 14px;font-weight:700;color:var(--d)}</style></head><body>
 <div id="app">
 <header><button class="ib" data-m="1" aria-label="Menu" id="hm"></button><div class="logo" data-go="#/shop"><b id="lg"></b><small>PREMIUM UNSTITCHED FABRICS</small></div><div style="display:flex"><button class="ib" data-s="1" aria-label="Search" id="hs"></button><button class="ib" data-go="#/cart" aria-label="Cart" id="hc"></button></div></header>
 <div class="sbar" id="sb" hidden><input id="sq" placeholder="Search fabric or SKU" autocomplete="off"></div>
@@ -133,16 +109,12 @@ return `<div class="pad"><h2>Your Cart (${cart.length})</h2>${cart.map((c,i)=>`<
 <div class="tot"><span>Total</span><span>${money(t)}</span></div><button class="b f" style="width:100%;margin-bottom:10px" data-co="cart">Checkout</button><button class="b" style="width:100%" data-go="#/shop">Continue Shopping</button></div>`}
 function checkV(){if(!CK.length)return `<div class="empty">Nothing to order yet.<br><br><button class="b f" data-go="#/shop">Go to Shop</button></div>`;const t=CK.reduce((a,c)=>a+c.unit*c.qty,0),u=user()||{};
 return `<div class="pad"><h2>Checkout</h2>${CK.map(c=>`<div class="ci"><img src="${esc(thumb(c.id))}" alt=""><div><b>${esc(c.name)}</b><div class="sku">${esc(c.opt)} · Qty ${c.qty}</div><div style="font-weight:600">${money(c.unit*c.qty)}</div></div></div>`).join('')}<div class="tot"><span>Total</span><span>${money(t)}</span></div>
-<form id="of"><label>Full Name</label><input id="on" required value="${esc(u.name||'')}"><label>Phone / WhatsApp</label><input id="op" type="tel" required><label>Email (optional)</label><input id="oe" type="email"><label>City</label><input id="oc" required><label>Delivery Address</label><textarea id="oa" rows="2" required></textarea><label>Order Note (optional)</label><textarea id="ot" rows="2"></textarea>
+<form id="of"><label>Full Name</label><input id="on" required value="${esc(u.name||'')}"><label>Phone / WhatsApp</label><input id="op" type="tel" required><label>Email / Gmail</label><input id="oe" type="email" required><label>City</label><input id="oc" required><label>Delivery Address</label><textarea id="oa" rows="2" required></textarea><label>Order Note (optional)</label><textarea id="ot" rows="2"></textarea>
 <button class="b f" style="width:100%;margin-top:16px" id="ob">Place Order</button><div class="msg e" id="om"></div></form></div>`}
 function doneV(){return `<div class="pad" style="text-align:center"><div class="ok">${I('check',38)}</div><h2>Order Confirmed</h2><p>Your order has been received. We will contact you to confirm delivery.</p><p><b>Order No: ${DONE.map(i=>'#'+i).join(', ')}</b></p><div style="display:grid;gap:10px;margin-top:18px"><button class="b f" data-go="#/shop">Continue Shopping</button></div></div>`}
-function acctV(){const u=user();if(u)return `<div class="pad"><h2>Welcome, ${esc(u.name)}</h2><p>${esc(u.id)}</p><div style="display:grid;gap:10px;margin-top:16px"><button class="b" data-go="#/cart">My Cart</button><button class="b" data-go="#/contact">Contact Us</button><button class="b f" data-lo="1">Logout</button></div></div>`;
-return `<div class="pad"><h2>My Account</h2><div class="tabs"><button class="${AT=='login'?'on':''}" data-at="login">Login</button><button class="${AT=='signup'?'on':''}" data-at="signup">Sign Up</button></div><form id="af">${AT=='signup'?'<label>Full Name</label><input id="an" required>':''}<label>Email or Phone</label><input id="ai" required><label>Password</label><input id="ap" type="password" required><button class="b f" style="width:100%;margin-top:16px">${AT=='login'?'Login':'Create Account'}</button><div class="msg" id="am"></div></form></div>`}
-function infoV(k){const ph=S.phone||'',wa=(S.wa||'').replace(/\D/g,''),ig=S.ig||'';
-const T={about:['About AL NAFAY',`<p>Premium gents unstitched fabric with simple Thaan and Suit options.</p><p><b>Quality · Comfort · Style</b></p>${ig?`<p>Instagram: ${esc(ig)}</p>`:''}`],
-exchange:['Exchange Policy','<p>Unstitched fabric can be exchanged if it is uncut and unused. Contact us with your order number to arrange an exchange.</p>'],
-contact:['Contact Us',`<p>Call or message us for orders, fabric details and delivery.</p><div style="display:grid;gap:10px;margin-top:14px">${ph?`<a class="b f" href="tel:${esc(ph)}">${I('phone',18)} ${esc(ph)}</a>`:''}${wa?`<a class="b l" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>`:''}${!ph&&!wa?'<p>Contact details will be added soon.</p>':''}</div>`]}[k];
-return `<div class="pad"><h2>${T[0]}</h2>${T[1]}</div>`}
+function acctV(){const u=user(),em=u?.id||S.email||'';if(u)return `<div class="pad"><div class="account-card"><div style="font-size:11px;letter-spacing:2px;color:var(--m);font-weight:800">MY AL NAFAY</div><h2 style="margin:4px 0">Welcome, ${esc(u.name)}</h2><div class="account-mail"><div class="mail-icon">✉</div><div><small>Account Email / Gmail</small><b>${esc(em||'Email not added')}</b></div></div><p style="color:var(--mu);margin:0">Your account details are kept here for a clean and simple shopping experience.</p></div><div style="display:grid;gap:10px;margin-top:16px"><button class="b" data-go="#/cart">My Cart</button><button class="b" data-go="#/contact">Contact Us</button><button class="b f" data-lo="1">Logout</button></div></div>`;
+return `<div class="pad"><div class="account-card"><div style="font-size:11px;letter-spacing:2px;color:var(--m);font-weight:800">AL NAFAY ACCOUNT</div><h2 style="margin:4px 0 6px">My Account</h2><p style="color:var(--mu);margin:0">Use your Gmail or phone to create and access your account.</p></div><div class="tabs" style="margin-top:14px"><button class="${AT=='login'?'on':''}" data-at="login">Login</button><button class="${AT=='signup'?'on':''}" data-at="signup">Sign Up</button></div><form id="af">${AT=='signup'?'<label>Full Name</label><input id="an" required>':''}<label>Email / Gmail or Phone</label><input id="ai" type="text" required><label>Password</label><input id="ap" type="password" required><button class="b f" style="width:100%;margin-top:16px">${AT=='login'?'Login':'Create Account'}</button><div class="msg" id="am"></div></form></div>`}
+function infoV(k){const ph=S.phone||'',wa=(S.wa||'').replace(/\D/g,''),ig=S.ig||'',em=S.email||'',loc=S.location||'',addr=S.address||'',hours=S.hours||'',owner=S.owner||'';if(k==='about'){return `<div class="about-hero"><div style="font-size:10px;letter-spacing:2px">AL NAFAY · GENTS UNSTITCHED</div><h2>${esc(S.about_title||'About AL NAFAY')}</h2><p>${esc(S.tagline||'Quality · Comfort · Style')}</p></div>${owner?`<div class="about-owner">Owner: ${esc(owner)}</div>`:''}${S.about_text?`<div class="about-copy">${esc(S.about_text)}</div>`:''}<div class="about-grid">${loc?`<div class="about-info"><div class="ai">⌖</div><div><b>Location</b><div>${esc(loc)}</div></div></div>`:''}${addr?`<div class="about-info"><div class="ai">⌂</div><div><b>Address</b><div>${esc(addr)}</div></div></div>`:''}${ph?`<div class="about-info"><div class="ai">☎</div><div><b>Phone</b><div>${esc(ph)}</div></div></div>`:''}${wa?`<div class="about-info"><div class="ai">◉</div><div><b>WhatsApp</b><div>${esc(S.wa)}</div></div></div>`:''}${em?`<div class="about-info"><div class="ai">✉</div><div><b>Email / Gmail</b><div>${esc(em)}</div></div></div>`:''}${hours?`<div class="about-info"><div class="ai">◷</div><div><b>Business Hours</b><div>${esc(hours)}</div></div></div>`:''}${ig?`<div class="about-info"><div class="ai">◎</div><div><b>Instagram</b><div>${esc(ig)}</div></div></div>`:''}</div>`;}const T={exchange:['Exchange Policy','<p>Unstitched fabric can be exchanged if it is uncut and unused. Contact us with your order number to arrange an exchange.</p>'],contact:['Contact Us',`<p>Call or message us for orders, fabric details and delivery.</p><div style="display:grid;gap:10px;margin-top:14px">${ph?`<a class="b f" href="tel:${esc(ph)}">${I('phone',18)} ${esc(ph)}</a>`:''}${wa?`<a class="b l" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>`:''}${em?`<a class="b" href="mailto:${esc(em)}">✉ ${esc(em)}</a>`:''}${!ph&&!wa&&!em?'<p>Contact details will be added soon.</p>':''}</div>`]}[k];return `<div class="pad"><h2>${T[0]}</h2>${T[1]}</div>`}
 function render(){const h=(location.hash||'#/shop').slice(2).split('/'),k=h[0];const V={shop:()=>list(),sale:()=>list(1),p:()=>detail(+h[1],h[2]),cart:cartV,checkout:checkV,done:doneV,account:acctV,about:()=>infoV('about'),contact:()=>infoV('contact'),exchange:()=>infoV('exchange')};
 $('#v').innerHTML=(V[k]||V.shop)();$('#hm').innerHTML=I('menu',28);$('#hs').innerHTML=I('search',26);
 $('#hc').innerHTML=I('cart',26)+(cart.length?`<span class="badge">${cart.length}</span>`:'');
@@ -177,20 +149,6 @@ if(AT==='signup'){if(p.length<6){m.className='msg e';m.textContent='Password mus
 else{const a=JSON.parse(localStorage.getItem(K)||'null');if(!a){m.className='msg e';m.textContent='No account found. Please sign up first.';return}
 if(a.id!==i||a.pass!==p){m.className='msg e';m.textContent='Incorrect email/phone or password.';return}localStorage.setItem('an_user',JSON.stringify({name:a.name,id:a.id}));location.hash='#/shop';render()}}});
 addEventListener('hashchange',render);
-(async()=>{render();try{[P,S]=await Promise.all([fetch('/api/products').then(r=>r.json()),fetch('/api/settings').then(r=>r.json())])}catch(e){$('#v').innerHTML='<div class="empty">Could not load products. Start the server with run.bat and open http://localhost:5000/</div>';return}
+(async()=>{render();try{[P,S]=await Promise.all([fetch('/api/products').then(r=>r.json()),fetch('/api/settings').then(r=>r.json())])}catch(e){$('#v').innerHTML='<div class="empty">Could not load products. Please refresh the page and try again.</div>';return}
 P=P.map(p=>({...p,id:+p.id}));cart=cart.filter(c=>P.some(p=>p.id===c.id)).map(({img,...c})=>c);saveC();render()})();
-</script><script>
-(()=>{const v=document.getElementById('v');if(!v)return;
-const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
-let ent=false,t;const go=()=>{ent=true;v.classList.add('enter');clearTimeout(t);t=setTimeout(()=>{ent=false;v.classList.remove('enter')},1300)};
-go();addEventListener('hashchange',go);
-const hd=document.querySelector('header');addEventListener('scroll',()=>hd&&hd.classList.toggle('sc',scrollY>8),{passive:true});
-if(calm)return;
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const c=e.target;c.style.transitionDelay=(([...c.parentNode.children].indexOf(c))%2)*70+'ms';c.classList.add('in');io.unobserve(c)}}),{threshold:.12});
-const pass=()=>{if(!ent)return;v.querySelectorAll('.list .card:not(.rv)').forEach(c=>{c.classList.add('rv');io.observe(c)})};
-new MutationObserver(pass).observe(v,{childList:true});pass();
-const hc=document.getElementById('hc');
-if(hc){const n=()=>{const b=hc.querySelector('.badge');return b?+b.textContent:0};let last=n();
-new MutationObserver(()=>{const x=n();if(x>last)document.querySelectorAll('#hc .badge,.bn .badge').forEach(e=>e.classList.add('pop'));last=x}).observe(hc,{childList:true})}
-})();
 </script></body></html>
