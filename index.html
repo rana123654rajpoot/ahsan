@@ -131,57 +131,95 @@ header .ib[data-m]{display:none}header{padding:0 28px}
 .wafloat{bottom:24px}.toast{bottom:30px}
 }
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important;transition:none!important}.splash{display:none}}
-</style><style id="AN_ABOUT_V2">
+</style><style id="AN_ABOUT_V3">
+header .logo{order:0;flex:1;text-align:left;display:flex;align-items:center}
+header .logo img{height:52px;width:auto;display:block}
+#hm{order:3}header>div:last-child{order:2}
+.splash img{width:clamp(70px,22vw,112px);height:auto;margin-bottom:14px;animation:mk 1.1s both cubic-bezier(.2,.7,.2,1)}
+@keyframes mk{from{opacity:0;transform:translateY(16px) scale(.8)}to{opacity:1;transform:none}}
+@media(min-width:900px){header .logo{flex:0 0 auto}.hn{margin:0 auto}header .logo img{height:56px}}
 #v>.ab{max-width:none}
-.ab{background:#050B11;color:#E8ECF0;font-family:Inter,system-ui,sans-serif;font-size:15px;line-height:1.6}
+.ab{background:#050B11;color:#E8ECF0;font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.55;overflow-x:hidden}
 .ab a{color:inherit}
-.ab-hero{padding:26px 22px 34px;background:radial-gradient(circle at 85% 20%,#C8A25E33,transparent 40%),repeating-linear-gradient(115deg,#0000 0 38px,#ffffff08 38px 40px),linear-gradient(120deg,#050B11,#13263A);border-bottom:1px solid #22364A}
-.ab-bc{font-size:13px;color:#9AA3AD}.ab-bc a{cursor:pointer}.ab-bc i{font-style:normal;margin:0 8px;color:#C8A25E}
-.ab-hero h1{font:600 clamp(40px,7vw,64px)/1.1 'Cormorant Garamond',Georgia,serif;margin:14px 0 8px;color:#fff}
-.ab-sub{letter-spacing:.28em;font-size:12px;color:#fff;text-transform:uppercase}.ab-sub i{font-style:normal;margin:0 10px;color:#C8A25E}
-.ab-line{width:56px;height:2px;background:#C8A25E;margin:14px 0}
-.ab-hero p{max-width:30em;color:#d3d9df;margin:0}
-.ab-main{display:grid;grid-template-columns:1fr;gap:18px;padding:20px 16px 8px}
-.ab-card{border:1px solid #22364A;border-radius:10px;background:#0B1620;padding:20px;min-width:0}
-.ab-who{background:transparent;border:0;padding:6px 4px}
-.ab-eye{color:#C8A25E;letter-spacing:.25em;font-size:12px;font-weight:600}
+.ab-hero{position:relative;padding:20px 16px 22px;border-bottom:1px solid #22364A;overflow:hidden;isolation:isolate}
+.ab-hero::before{content:"";position:absolute;inset:0;z-index:-2;background:#050B11 url(/media/about_hero.jpg) right center/auto 130% no-repeat;animation:kb 16s ease-in-out infinite alternate}
+.ab-hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#050B11 28%,#050B11cc 52%,#050B1100 100%)}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.12) translateX(-2%)}}
+.ab-bc{font-size:13px;color:#e4e8ec}.ab-bc a{cursor:pointer}.ab-bc i{font-style:normal;margin:0 8px;color:#fff}
+.ab-hero h1{font:500 clamp(40px,10vw,58px)/1.1 'Cormorant Garamond',Georgia,serif;margin:16px 0 14px;color:#fff;animation:rise .9s both cubic-bezier(.2,.7,.2,1)}
+.ab-bc{animation:rise .7s both}
+.ab-sub{letter-spacing:.13em;font-size:9.5px;white-space:nowrap;font-weight:600;color:#fff;text-transform:uppercase;animation:rise .9s .25s both}.ab-sub i{font-style:normal;margin:0 6px;color:#C8A25E}
+.ab-line{width:44px;height:2px;background:#C8A25E;margin:14px 0 0;transform-origin:left;animation:grow 1s .5s both}
+@keyframes grow{from{transform:scaleX(0)}to{transform:none}}
+.ab-hero p{display:none;max-width:30em;color:#d3d9df;margin:14px 0 0}
+.ab-main{padding:10px 12px 0;display:grid;gap:16px}
+.ab-who2{display:grid;grid-template-columns:1.12fr .88fr;gap:12px;align-items:start;padding-top:6px}
+.ab-eye{color:#C8A25E;letter-spacing:.22em;font-size:11px;font-weight:700}
 .ab h2,.ab h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;color:#fff;margin:0}
-.ab-who h2{font-size:clamp(30px,4vw,38px);line-height:1.15;margin:8px 0 14px}
-.ab-who p{margin:0 0 14px;color:#e4e8ec}
-.ab-btn{display:inline-flex;gap:10px;align-items:center;border:1px solid #C8A25E;color:#C8A25E!important;padding:12px 20px;border-radius:4px;font-weight:600;background:transparent;cursor:pointer;font-size:14px;text-decoration:none}
-.ab-btn:hover{background:#C8A25E22}
-.ab-img{border:1px solid #22364A;border-radius:10px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:3px;background:#22364A;min-height:260px}
-.ab-img img{width:100%;height:100%;object-fit:cover;display:block;min-height:130px}
-.ab-touch h3{font-size:28px;margin-bottom:6px}.ab-touch>p{color:#aab4be;font-size:14px;margin:0 0 14px}
-.ab-row{display:flex;gap:14px;align-items:flex-start;margin:14px 0}
-.ab-ic{width:44px;height:44px;border-radius:50%;border:1px solid #C8A25E55;background:#050B11;color:#C8A25E;display:grid;place-items:center;flex:none}
+.ab-who h2{font-size:clamp(26px,7vw,36px);line-height:1.12;margin:6px 0 12px}
+.ab-who p{margin:0 0 12px;color:#e4e8ec;font-size:12.5px}
+.ab-btn{display:inline-flex;gap:8px;align-items:center;border:1px solid #C8A25E;color:#C8A25E!important;padding:11px 18px;border-radius:4px;font-weight:600;background:transparent;cursor:pointer;font-size:13px;text-decoration:none;position:relative;overflow:hidden;transition:background .25s}
+.ab-btn:hover{background:#C8A25E22}.ab-btn b{display:inline-block;transition:transform .25s}.ab-btn:hover b{transform:translateX(5px)}
+.ab-btn.fill{background:#C8A25E;color:#0B1620!important;justify-content:center;width:100%;font-weight:700}.ab-btn.fill:hover{background:#d8b472}
+.ab-btn::after,.ab-send::after{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,#ffffff55,transparent);transform:skewX(-20deg)}
+.ab-btn:hover::after,.ab-send:hover::after{animation:sheen .8s}
+@keyframes sheen{to{left:130%}}
+.ab-ph{border-radius:8px;overflow:hidden;border:1px solid #22364A;background:#0B1620}
+.ab-ph img{width:100%;height:100%;display:block;object-fit:cover;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.ab-ph:hover img{transform:scale(1.07)}
+.ab-stack{height:100%;min-height:290px}
+.ab-feat{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #22364A;border-bottom:1px solid #22364A}
+.ab-f{display:flex;gap:12px;align-items:center;padding:16px 8px}
+.ab-f:nth-child(1),.ab-f:nth-child(2){border-bottom:1px solid #22364A}.ab-f:nth-child(odd){border-right:1px solid #22364A}.ab-f:nth-child(even){padding-left:14px}
+.ab-ic{width:44px;height:44px;border-radius:50%;border:1px solid #C8A25E;background:#050B11;color:#C8A25E;display:grid;place-items:center;flex:none;transition:transform .4s,background .3s}
 .ab-ic svg{width:21px;height:21px}
-.ab-row b{display:block;color:#fff;font-size:15px}.ab-row div div{color:#aab4be;font-size:14px;word-break:break-word}
-.ab-row a{color:#C8A25E}
-.ab-feat{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #22364A}
-.ab-f{padding:20px 14px 20px 4px;border-bottom:1px solid #22364A}.ab-f:nth-child(odd){border-right:1px solid #22364A}.ab-f:nth-child(even){padding-left:16px}
-.ab-f .ab-ic{width:40px;height:40px;margin-bottom:10px;background:transparent}
-.ab-f h4{font:600 19px 'Cormorant Garamond',Georgia,serif;color:#fff;margin:0 0 3px}.ab-f p{margin:0;color:#aab4be;font-size:13.5px}
-.ab-map h3,.ab-msg h3{display:flex;gap:10px;align-items:center;font-size:20px;margin-bottom:14px}.ab-map h3 svg,.ab-msg h3 svg{width:20px;height:20px;color:#C8A25E}
-.ab-map iframe{width:100%;height:230px;border:0;border-radius:6px;background:#142638;display:block;margin-bottom:14px}
-.ab-msg input,.ab-msg textarea{width:100%;background:#050B11;border:1px solid #22364A;border-radius:6px;color:#fff;padding:13px;margin-bottom:12px;font:15px Inter,system-ui,sans-serif;min-height:48px}
-.ab-msg textarea{min-height:120px;resize:vertical}
+.ab-f:hover .ab-ic,.ab-row:hover .ab-ic{transform:scale(1.12) rotate(-6deg);background:#C8A25E22}
+.ab-f h4{font:600 15px 'Cormorant Garamond',Georgia,serif;color:#fff;margin:0 0 2px;font-size:16px}.ab-f p{margin:0;color:#aab4be;font-size:11.5px;line-height:1.4}
+.ab-card{border:1px solid #22364A;border-radius:10px;background:#07101A;padding:16px;min-width:0}
+.ab-touch{display:grid;grid-template-columns:1fr .86fr;grid-template-areas:"th tp" "tr tp";column-gap:12px;align-items:start}
+.ab-th{grid-area:th}.ab-tr{grid-area:tr}.ab-tp{grid-area:tp;height:100%;min-height:250px}
+.ab-touch h3{font-size:27px;margin-bottom:4px}.ab-touch .ab-th p{color:#aab4be;font-size:12px;margin:0 0 6px}
+.ab-row{display:flex;gap:11px;align-items:flex-start;margin:11px 0}
+.ab-row .ab-ic{width:36px;height:36px}.ab-row .ab-ic svg{width:17px;height:17px}
+.ab-row b{display:block;color:#fff;font-size:12.5px}.ab-row div div{color:#aab4be;font-size:11.5px;word-break:break-word}.ab-row a{color:#fff}
+.ab-map h3,.ab-msg h3{display:flex;gap:9px;align-items:center;font-size:19px;margin-bottom:4px}.ab-map h3 svg,.ab-msg h3 svg{width:18px;height:18px;color:#C8A25E}
+.ab-map>p{color:#aab4be;font-size:12px;margin:0 0 10px}
+.ab-map iframe{width:100%;height:170px;border:0;border-radius:6px;background:#142638;display:block;margin-bottom:10px}
+.ab-fld{position:relative;margin-bottom:10px}.ab-fld svg{position:absolute;left:12px;top:14px;width:16px;height:16px;color:#7B8794}
+.ab-msg input,.ab-msg textarea{width:100%;background:#050B11;border:1px solid #22364A;border-radius:5px;color:#fff;padding:12px 12px 12px 38px;font:14px Inter,system-ui,sans-serif;min-height:44px;transition:border .2s,box-shadow .2s}
+.ab-msg textarea{min-height:92px;resize:vertical}
 .ab-msg input:focus,.ab-msg textarea:focus{border-color:#C8A25E;outline:none;box-shadow:0 0 0 3px #C8A25E33}
-.ab-send{width:100%;background:#C8A25E;color:#0B1620;border:0;border-radius:6px;padding:14px;font-weight:700;font-size:15px;cursor:pointer}
-.ab-foot{margin-top:18px;border-top:1px solid #22364A;padding:26px 20px 90px;display:grid;grid-template-columns:1fr 1fr;gap:22px;color:#aab4be;font-size:14px}
-.ab-foot .lg{grid-column:1/-1}.ab-foot .lg b{display:block;font:700 30px 'Cormorant Garamond',Georgia,serif;letter-spacing:.1em;color:#C8A25E}
-.ab-foot h5{margin:0 0 8px;color:#fff;font-size:14px}.ab-foot a{display:block;margin:4px 0;cursor:pointer}.ab-foot a:hover{color:#C8A25E}
-.ab-copy{grid-column:1/-1;text-align:center;border-top:1px solid #22364A;padding-top:16px;font-size:12.5px}
+.ab-send{position:relative;overflow:hidden;width:100%;background:#C8A25E;color:#0B1620;border:0;border-radius:5px;padding:13px;font-weight:700;font-size:14px;cursor:pointer}
+.ab-foot{margin-top:18px;border-top:1px solid #22364A;padding:20px 16px 96px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;color:#aab4be;font-size:12px;align-items:start}
+.ab-foot .lg{display:flex;flex-direction:column;align-items:center;text-align:center}
+.ab-foot .lg img{width:46px;height:auto}.ab-foot .lg b{font:600 22px 'Cormorant Garamond',Georgia,serif;letter-spacing:.12em;color:#C8A25E}.ab-foot .lg small{font-size:9px;color:#fff}
+.ab-foot h5{margin:0 0 8px;color:#fff;font-size:12.5px}.ab-foot a{display:block;margin:5px 0;cursor:pointer;font-size:11.5px}.ab-foot a:hover{color:#C8A25E}
+.ab-soc{display:flex;gap:8px;flex-wrap:wrap}.ab-soc a{width:32px;height:32px;border-radius:50%;border:1px solid #C8A25E88;color:#C8A25E;display:grid!important;place-items:center;margin:0}.ab-soc svg{width:16px;height:16px}.ab-soc a:hover{background:#C8A25E;color:#0B1620}
+.ab-copy{grid-column:1/-1;text-align:center;border-top:1px solid #22364A;padding-top:14px;font-size:11.5px}
+/* scroll reveal */
+.ab.rdy .rv{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.ab.rdy .rv.l{transform:translateX(-34px)}.ab.rdy .rv.r{transform:translateX(34px)}
+.ab.rdy .rv.in{opacity:1;transform:none}
+.ab.rdy .ab-ph img{clip-path:inset(0 0 100% 0);transition:clip-path 1.2s cubic-bezier(.2,.7,.2,1) var(--d,0s),transform 1.4s cubic-bezier(.2,.7,.2,1)}
+.ab.rdy .ab-ph.in img{clip-path:inset(0 0 0 0)}
+.ab.rdy .ab-ic.rv{transform:scale(.4)}.ab.rdy .ab-ic.rv.in{transform:none}
 @media(min-width:900px){
-.ab-hero{padding:34px 48px 48px}.ab-main{grid-template-columns:1.1fr .9fr 1fr;padding:28px 40px 10px;gap:22px}
-.ab-who{grid-column:1}.ab-img{grid-column:2}.ab-touch{grid-column:3}.ab-feat{grid-column:1}.ab-map{grid-column:2}.ab-msg{grid-column:3}
-.ab-foot{grid-template-columns:1.4fr 1fr 1fr 1fr;padding:30px 48px 40px}.ab-foot .lg{grid-column:auto}
+.ab{font-size:15px}.ab-hero{padding:34px 48px 44px}.ab-hero::after{background:linear-gradient(90deg,#050B11 38%,#050B1199 60%,#05B1100 100%)}
+.ab-hero h1{font-size:64px}.ab-sub{font-size:12px;letter-spacing:.28em}.ab-hero p{display:block}
+.ab-main{grid-template-columns:1.1fr .9fr 1fr;padding:28px 40px 6px;gap:22px}
+.ab-who2{grid-column:1/3;grid-template-columns:1fr 1fr;gap:22px;padding:0}
+.ab-who p{font-size:15px}.ab-who h2{font-size:40px}.ab-stack{min-height:380px}
+.ab-feat{grid-column:1;align-self:start}.ab-f{align-items:flex-start;flex-direction:column;gap:8px;padding:20px 14px}.ab-f h4{font-size:19px}.ab-f p{font-size:13.5px}
+.ab-touch{grid-column:3;grid-row:1;display:block;padding:22px}.ab-touch h3{font-size:30px}.ab-touch .ab-th p{font-size:14px}.ab-row b{font-size:15px}.ab-row div div{font-size:14px}.ab-row .ab-ic{width:44px;height:44px}
+.ab-tp{height:170px;min-height:0;margin-top:12px}
+.ab-map{grid-column:2}.ab-msg{grid-column:3}.ab-map iframe{height:230px}
+.ab-foot{grid-template-columns:1.4fr 1fr 1fr;padding:30px 48px 40px}.ab-foot .lg{align-items:flex-start;text-align:left}
 }
 </style></head><body>
-<div class="splash" id="sp"><i></i><i></i><div><span>AL NAFAY</span><small>GENTS UNSTITCHED</small><u></u></div></div>
+<div class="splash" id="sp"><i></i><i></i><div><img src="/media/logo_mark.png" alt="" width="112" height="106"><span>ALNAFAY</span><small>GENTS UNSTITCHED</small><u></u></div></div>
 <script>try{if(sessionStorage.getItem("an_sp")){document.getElementById("sp").remove()}else{sessionStorage.setItem("an_sp","1");setTimeout(function(){var e=document.getElementById("sp");e&&e.remove()},3000)}}catch(e){setTimeout(function(){var x=document.getElementById("sp");x&&x.remove()},3000)}</script>
 <div id="app">
-<header><button class="ib" data-m="1" aria-label="Menu" id="hm"></button><div class="logo" data-go="#/shop"><b id="lg"></b><small>PREMIUM UNSTITCHED FABRICS</small></div><nav class="hn" id="hn"></nav><div style="display:flex"><button class="ib" data-s="1" aria-label="Search" id="hs"></button><button class="ib" data-go="#/cart" aria-label="Cart" id="hc"></button></div></header>
+<header><button class="ib" data-m="1" aria-label="Menu" id="hm"></button><div class="logo" data-go="#/shop"><img src="/media/logo_full.png" alt="ALNAFAY – Gents Unstitched" width="190" height="66"></div><nav class="hn" id="hn"></nav><div style="display:flex"><button class="ib" data-s="1" aria-label="Search" id="hs"></button><button class="ib" data-go="#/cart" aria-label="Cart" id="hc"></button></div></header>
 <div class="sbar" id="sb" hidden><input id="sq" placeholder="Search fabric or SKU" autocomplete="off"></div>
 <main id="v"></main>
 <div class="bn" id="bn"></div>
@@ -234,24 +272,25 @@ return `<div class="pad"><h2>Your details</h2><p>Tell us where to send your orde
 function doneV(){return `<div class="order-success"><span class="success-spark s1"></span><span class="success-spark s2"></span><span class="success-spark s3"></span><span class="success-spark s4"></span><div class="success-orb">${I('check',44)}</div><h2 class="success-title">Order Placed!</h2><p class="success-sub">Thank you for shopping with AL NAFAY. Your order has been received successfully.</p><div class="order-number">${DONE.map(i=>'Order #'+i).join(' · ')}</div><div class="order-progress"><div class="progress-step active"><div class="progress-dot">✓</div>Order Placed</div><div class="progress-step"><div class="progress-dot">2</div>Confirmed</div><div class="progress-step"><div class="progress-dot">3</div>Completed</div></div><div class="success-card"><b>What happens next?</b><div style="margin-top:6px;color:var(--mu)">Our team will review your order and contact you for confirmation and delivery details.</div></div><div style="display:grid;gap:10px;margin-top:18px"><button class="b f" data-go="#/shop">Continue Shopping</button><button class="b" data-go="#/account">Go to My Account</button></div></div>`}
 function acctV(){const u=user(),em=u?.id||S.email||'';if(u)return `<div class="pad"><div class="account-card"><div style="font-size:11px;letter-spacing:2px;color:var(--m);font-weight:800">MY AL NAFAY</div><h2 style="margin:4px 0">Welcome, ${esc(u.name)}</h2><div class="account-mail"><div class="mail-icon">✉</div><div><small>Account Email / Gmail</small><b>${esc(em||'Email not added')}</b></div></div><p style="color:var(--mu);margin:0">Your account details are kept here for a clean and simple shopping experience.</p></div><div style="display:grid;gap:10px;margin-top:16px"><button class="b" data-go="#/cart">My Cart</button><button class="b" data-go="#/contact">Contact Us</button><button class="b f" data-lo="1">Logout</button></div></div>`;
 return `<div class="pad"><div class="account-card"><div style="font-size:11px;letter-spacing:2px;color:var(--m);font-weight:800">AL NAFAY ACCOUNT</div><h2 style="margin:4px 0 6px">My Account</h2><p style="color:var(--mu);margin:0">Use your Gmail or phone to create and access your account.</p></div><div class="tabs" style="margin-top:14px"><button class="${AT=='login'?'on':''}" data-at="login">Login</button><button class="${AT=='signup'?'on':''}" data-at="signup">Sign Up</button></div><form id="af">${AT=='signup'?'<label>Full Name</label><input id="an" required>':''}<label>Email / Gmail or Phone</label><input id="ai" type="text" required><label>Password</label><input id="ap" type="password" required><button class="b f" style="width:100%;margin-top:16px">${AT=='login'?'Login':'Create Account'}</button><div class="msg" id="am"></div></form></div>`}
-const ABI={pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',wa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-1.8-1.8l.8-1-1-2z"/></svg>',gem:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12l4 6-10 11L2 10z"/><path d="M2 10h20M9 4l-2 6 5 11 5-11-2-6"/></svg>',shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>',truck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>',head:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M19 20c0 1.5-2 2-5 2"/></svg>',send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3L2 11l7 3 3 7z"/><path d="M22 3L9 14"/></svg>'};
+const ABI={pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>',mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',wa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-1.8-1.8l.8-1-1-2z"/></svg>',gem:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12l4 6-10 11L2 10z"/><path d="M2 10h20M9 4l-2 6 5 11 5-11-2-6"/></svg>',shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>',truck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6h11v10H2zM13 10h4l4 3v3h-8"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>',head:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M19 20c0 1.5-2 2-5 2"/></svg>',send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3L2 11l7 3 3 7z"/><path d="M22 3L9 14"/></svg>',user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>',ig:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".8" fill="currentColor"/></svg>'};
 function abSend(e){e.preventDefault();const f=e.target,t='Hello AL NAFAY,\n\n'+f.am.value.trim()+'\n\nName: '+f.an.value.trim()+'\nEmail: '+f.ae.value.trim(),w=waNum();if(w){window.open('https://wa.me/'+w+'?text='+encodeURIComponent(t),'_blank','noopener');toast('Opening WhatsApp...')}else if(S.email){location.href='mailto:'+S.email+'?subject='+encodeURIComponent('Message from website')+'&body='+encodeURIComponent(t)}else toast('Contact details will be added soon.');return false}
+function abReveal(){const q=[...document.querySelectorAll('.ab .rv')];if(!q.length)return;const all=()=>q.forEach(e=>e.classList.add('in'));if(!('IntersectionObserver' in window)){all();return}const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.12,rootMargin:'0px 0px -6% 0px'});q.forEach(e=>io.observe(e));setTimeout(all,6000)}
 function aboutV(){const ph=S.phone||S.wa||'',em=S.email||'',addr=S.address||S.location||'',hours=S.hours||'',w=waNum(),mq=encodeURIComponent(S.location||S.address||'Faisalabad, Pakistan'),ig=S.ig||'';
-const row=(ic,t,v)=>v?`<div class="ab-row"><span class="ab-ic">${ABI[ic]}</span><div><b>${t}</b><div>${v}</div></div></div>`:'';
-const im=[1,2,3,4].map(n=>`<img src="/media/fabric_${n}.png" alt="AL NAFAY fabric ${n}" loading="lazy">`).join('');
-return `<div class="ab"><div class="ab-hero"><div class="ab-bc"><a data-go="#/shop">Home</a><i>›</i>About Us</div><h1>About Us</h1><div class="ab-sub">Our Story<i>•</i>Our Vision<i>•</i>Our Commitment</div><div class="ab-line"></div><p>At ALNAFAY, we believe that clothing is not just fabric, it's a reflection of your personality, values and lifestyle.</p></div>
-<div class="ab-main"><div class="ab-card ab-who"><div class="ab-eye">WHO WE ARE</div><h2>Crafting Elegance<br>for Every Man</h2><p>ALNAFAY is a premium brand specializing in high-quality gents unstitched fabrics. We bring you the finest materials, carefully selected for comfort, durability and timeless style.</p><p>Our journey started with a simple vision – to provide men with fabrics that not only look premium but also feel exceptional. Today, ALNAFAY stands for trust, quality and a commitment to your style.</p><a class="ab-btn" onclick="document.getElementById('ab-feat').scrollIntoView({behavior:'smooth',block:'center'})">Learn More →</a></div>
-<div class="ab-img">${im}</div>
-<div class="ab-card ab-touch"><h3>Get In Touch</h3><p>We'd love to hear from you. Reach out to us for any queries, support or business inquiries.</p>${row('pin','Our Location',esc(addr))}${row('phone','Phone / WhatsApp',esc(ph)+(hours?'<br>(Available '+esc(hours)+')':''))}${row('mail','Email',esc(em))}${w?row('wa','WhatsApp',`<a href="https://wa.me/${w}" target="_blank" rel="noopener">Chat with us on WhatsApp →</a>`):''}</div>
-<div class="ab-feat" id="ab-feat"><div class="ab-f"><span class="ab-ic">${ABI.gem}</span><h4>Premium Quality</h4><p>Only the finest fabrics for our valued customers.</p></div><div class="ab-f"><span class="ab-ic">${ABI.shield}</span><h4>Trusted Brand</h4><p>Building long-term trust since day one.</p></div><div class="ab-f"><span class="ab-ic">${ABI.truck}</span><h4>Fast &amp; Reliable Delivery</h4><p>Your order, our priority.</p></div><div class="ab-f"><span class="ab-ic">${ABI.head}</span><h4>Dedicated Support</h4><p>We are always here to help.</p></div></div>
-<div class="ab-card ab-map"><h3>${ABI.pin}Find Us on Map</h3><iframe title="Map of AL NAFAY" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=${mq}&output=embed"></iframe><a class="ab-btn" href="https://www.google.com/maps/search/?api=1&query=${mq}" target="_blank" rel="noopener">Open in Google Maps →</a></div>
-<div class="ab-card ab-msg"><h3>${ABI.send}Send Us a Message</h3><form onsubmit="return abSend(event)"><input name="an" placeholder="Your Name *" required autocomplete="name"><input name="ae" type="email" placeholder="Your Email *" required autocomplete="email"><textarea name="am" placeholder="Your Message *" required></textarea><button class="ab-send" type="submit">Send Message →</button></form></div></div>
-<div class="ab-foot"><div class="lg"><b>ALNAFAY</b>Gents Unstitched<br><small>Quality . Comfort . Style</small></div><div><h5>Quick Links</h5><a data-go="#/shop">Home</a><a data-go="#/shop">Shop</a><a data-go="#/about">About Us</a><a data-go="#/contact">Contact</a></div><div><h5>Customer Care</h5><a data-go="#/exchange">Return &amp; Exchange</a><a data-go="#/contact">Contact Us</a></div><div><h5>Follow Us</h5>${ig?`<a href="${/^https?:/.test(ig)?esc(ig):'https://instagram.com/'+esc(ig.replace(/^@/,''))}" target="_blank" rel="noopener">Instagram</a>`:''}${w?`<a href="https://wa.me/${w}" target="_blank" rel="noopener">WhatsApp</a>`:''}</div><div class="ab-copy">© ${new Date().getFullYear()} ALNAFAY. All rights reserved.</div></div></div>`}
+const row=(ic,t,v,d)=>v?`<div class="ab-row rv" style="--d:${d}s"><span class="ab-ic">${ABI[ic]}</span><div><b>${t}</b><div>${v}</div></div></div>`:'';
+const feat=(ic,t,p,d)=>`<div class="ab-f rv" style="--d:${d}s"><span class="ab-ic">${ABI[ic]}</span><div><h4>${t}</h4><p>${p}</p></div></div>`;
+setTimeout(abReveal,60);
+return `<div class="ab rdy"><div class="ab-hero"><div class="ab-bc"><a data-go="#/shop">Home</a><i>›</i>About Us</div><h1>About Us</h1><div class="ab-sub">Our Story<i>•</i>Our Vision<i>•</i>Our Commitment</div><div class="ab-line"></div><p>At ALNAFAY, we believe that clothing is not just fabric, it's a reflection of your personality, values and lifestyle.</p></div>
+<div class="ab-main"><div class="ab-who2"><div class="ab-who rv l"><div class="ab-eye">WHO WE ARE</div><h2>Crafting Elegance<br>for Every Man</h2><p>ALNAFAY is a premium brand specializing in high-quality gents unstitched fabrics. We bring you the finest materials, carefully selected for comfort, durability and timeless style.</p><p>Our journey started with a simple vision – to provide men with fabrics that not only look premium but also feel exceptional. Today, ALNAFAY stands for trust, quality and a commitment to your style.</p><a class="ab-btn" onclick="document.getElementById('ab-feat').scrollIntoView({behavior:'smooth',block:'center'})">Learn More <b>→</b></a></div><div class="ab-ph ab-stack rv r" style="--d:.15s"><img src="/media/about_stack.jpg" alt="ALNAFAY gents unstitched fabrics" loading="lazy"></div></div>
+<div class="ab-feat" id="ab-feat">${feat('gem','Premium Quality','Only the finest fabrics<br>for our valued customers.',0)}${feat('shield','Trusted Brand','Building long-term trust<br>since day one.',.12)}${feat('truck','Fast &amp; Reliable Delivery','Your order, our priority.',.24)}${feat('head','Dedicated Support','We are always here to help.',.36)}</div>
+<div class="ab-card ab-touch rv"><div class="ab-th"><h3>Get In Touch</h3><p>We'd love to hear from you. Reach out to us for any queries, support or business inquiries.</p></div><div class="ab-tr">${row('pin','Our Location',esc(addr),.05)}${row('phone','Phone / WhatsApp',esc(ph)+(hours?'<br>(Available '+esc(hours)+')':''),.15)}${row('mail','Email',esc(em),.25)}${w?row('wa','WhatsApp',`<a href="https://wa.me/${w}" target="_blank" rel="noopener">Chat with us on WhatsApp →</a>`,.35):''}</div><div class="ab-ph ab-tp rv r" style="--d:.2s"><img src="/media/about_store.jpg" alt="ALNAFAY store" loading="lazy"></div></div>
+<div class="ab-card ab-map rv"><h3>${ABI.pin}Find Us on Map</h3><p>We'd love to hear from you. Reach out to us</p><iframe title="Map of ALNAFAY" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=${mq}&output=embed"></iframe><a class="ab-btn fill" href="https://www.google.com/maps/search/?api=1&query=${mq}" target="_blank" rel="noopener">Open in Google Maps <b>→</b></a></div>
+<div class="ab-card ab-msg rv" style="--d:.1s"><h3>${ABI.send}Send Us a Message</h3><form onsubmit="return abSend(event)"><div class="ab-fld">${ABI.user}<input name="an" placeholder="Your Name *" required autocomplete="name"></div><div class="ab-fld">${ABI.mail}<input name="ae" type="email" placeholder="Your Email *" required autocomplete="email"></div><div class="ab-fld">${ABI.chat}<textarea name="am" placeholder="Your Message *" required></textarea></div><button class="ab-send" type="submit">Send Message →</button></form></div></div>
+<div class="ab-foot"><div class="lg rv"><img src="/media/logo_mark.png" alt=""><b>ALNAFAY</b><small>Gents Unstitched<br>Quality . Comfort . Style</small></div><div class="rv" style="--d:.1s"><h5>Quick Links</h5><a data-go="#/shop">Home</a><a data-go="#/shop">Shop</a><a data-go="#/about">About Us</a><a data-go="#/contact">Contact</a></div><div class="rv" style="--d:.2s"><h5>Follow Us</h5><div class="ab-soc">${ig?`<a aria-label="Instagram" href="${/^https?:/.test(ig)?esc(ig):'https://instagram.com/'+esc(ig.replace(/^@/,''))}" target="_blank" rel="noopener">${ABI.ig}</a>`:''}${w?`<a aria-label="WhatsApp" href="https://wa.me/${w}" target="_blank" rel="noopener">${ABI.wa}</a>`:''}</div></div><div class="ab-copy">© ${new Date().getFullYear()} ALNAFAY. All rights reserved.</div></div></div>`}
 function infoV(k){const ph=S.phone||'',wa=(S.wa||'').replace(/\D/g,''),ig=S.ig||'',em=S.email||'',loc=S.location||'',addr=S.address||'',hours=S.hours||'',owner=S.owner||'';if(k==='about')return aboutV();const T={exchange:['Exchange Policy','<p>Unstitched fabric can be exchanged if it is uncut and unused. Contact us with your order number to arrange an exchange.</p>'],contact:['Contact Us',`<p>Call or message us for orders, fabric details and delivery.</p><div style="display:grid;gap:10px;margin-top:14px">${ph?`<a class="b f" href="tel:${esc(ph)}">${I('phone',18)} ${esc(ph)}</a>`:''}${wa?`<a class="b l" href="https://wa.me/${wa}" target="_blank" rel="noopener">WhatsApp</a>`:''}${em?`<a class="b" href="mailto:${esc(em)}">✉ ${esc(em)}</a>`:''}${!ph&&!wa&&!em?'<p>Contact details will be added soon.</p>':''}</div>`]}[k];return `<div class="pad"><h2>${T[0]}</h2>${T[1]}</div>`}
 function render(){const h=(location.hash||'#/shop').slice(2).split('/'),k=h[0];const V={shop:()=>list(),sale:()=>list(1),p:()=>detail(+h[1],h[2]),cart:cartV,checkout:checkV,done:doneV,account:acctV,about:()=>infoV('about'),contact:()=>infoV('contact'),exchange:()=>infoV('exchange')};
 $('#v').innerHTML=(V[k]||V.shop)();$('#hm').innerHTML=I('menu',28);$('#hs').innerHTML=I('search',26);
 $('#hc').innerHTML=I('cart',26)+(cart.length?`<span class="badge">${cart.length}</span>`:'');
-$('#lg').innerHTML=I('leaf',26)+brand();
+void 0;
 const tabs=[['shop','Home','home'],['shop','Shop','shop'],['sale','Sale','tag'],['account','Account','user'],['cart','Cart','cart']];
 $('#bn').innerHTML=tabs.map((t,i)=>`<button data-go="#/${t[0]}" class="${(k===t[0]||(k==='p'&&i==1))&&i!==0?'on':''}">${I(t[2])}${t[1]}${t[0]==='cart'&&cart.length?`<span class="badge">${cart.length}</span>`:''}</button>`).join('');
 $('#sb').hidden=!(k==='shop'||k==='sale')||$('#sb').dataset.o!=='1';const w=waNum(),wf=$('#wf');wf.hidden=!w;if(w)wf.href='https://wa.me/'+w}
