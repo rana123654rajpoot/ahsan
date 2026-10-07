@@ -37,6 +37,7 @@ const ensureSeeded = async () => {
   const id = await nextId('products');
   await s.setJSON(key('products', id), { id, ...SEED_PRODUCT });
   await s.setJSON('settings', DEFAULT_SETTINGS);
+  if (!(await s.get('meta/admin_password_hash'))) await s.set('meta/admin_password_hash', hashPassword(DEFAULT_PASSWORD));
   await s.set('meta/seeded', '1');
 };
 const productValues = (d) => ({
@@ -45,22 +46,29 @@ const productValues = (d) => ({
   image: text(d.image), description: text(d.description), sale_on: !!d.sale_on, new_arrival: !!d.new_arrival,
   stock: d.stock === undefined ? true : !!d.stock
 });
-const secret = () => crypto.createHash('sha256').update(DEFAULT_PASSWORD).digest('hex');
-const sign = (payload) => crypto.createHmac('sha256', secret()).update(payload).digest('hex');
-const makeCookie = () => {
+const hashPassword = (value) => crypto.createHash('sha256').update(text(value)).digest('hex');
+const getPasswordHash = async () => {
+  const s = store();
+  return (await s.get('meta/admin_password_hash')) || hashPassword(DEFAULT_PASSWORD);
+};
+const secret = async () => getPasswordHash();
+const sign = async (payload) => crypto.createHmac('sha256', await secret()).update(payload).digest('hex');
+const makeCookie = async () => {
   const exp = Date.now() + 7*24*60*60*1000;
   const payload = String(exp);
-  const token = `${payload}.${sign(payload)}`;
+  const token = `${payload}.${await sign(payload)}`;
   return `an_admin=${token}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=${7*24*60*60}`;
 };
-const validCookie = (req) => {
+const validCookie = async (req) => {
   const raw = req.headers.get('cookie') || '';
   const match = raw.split(';').map(x=>x.trim()).find(x=>x.startsWith('an_admin='));
   if (!match) return false;
   const token = match.slice('an_admin='.length);
   const [exp,sig] = token.split('.');
   if (!exp || !sig || Number(exp) < Date.now()) return false;
-  return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(sign(exp)));
+  const expected = await sign(exp);
+  if (sig.length !== expected.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
 };
 const adminOnly = (req) => validCookie(req);
 const bad = (message,status=404) => json({error:message},status);
@@ -122,23 +130,42 @@ export default async (req) => {
 
   if (resource === 'admin' && idPart === 'login' && method === 'POST') {
     const d = await readJson(req);
-    if (text(d.password) !== DEFAULT_PASSWORD) return json({error:'Wrong password'},401);
-    return json({ok:true},200,{'Set-Cookie':makeCookie()});
+    const storedHash = await getPasswordHash();
+    if (hashPassword(d.password) !== storedHash) return json({error:'Wrong password'},401);
+    return json({ok:true},200,{'Set-Cookie':await makeCookie()});
   }
   if (resource === 'admin' && idPart === 'logout' && method === 'POST') {
     return json({ok:true},200,{'Set-Cookie':'an_admin=; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=0'});
   }
-  if (resource === 'admin' && idPart === 'me' && method === 'GET') return json({admin:adminOnly(req)});
+  if (resource === 'admin' && idPart === 'me' && method === 'GET') return json({admin:await adminOnly(req)});
 
   await ensureSeeded();
 
+  if (resource === 'admin' && idPart === 'password' && method === 'POST') {
+    if (!(await adminOnly(req))) return json({error:'Login required'},401);
+    const d = await readJson(req);
+    const current = text(d.current_password), next = text(d.new_password);
+    if (!current || !next) return bad('Current and new password are required',400);
+    if (next.length < 8) return bad('New password must be at least 8 characters',400);
+    const storedHash = await getPasswordHash();
+    if (hashPassword(current) !== storedHash) return json({error:'Current password is incorrect'},400);
+    await s.set('meta/admin_password_hash', hashPassword(next));
+    return json({ok:true},200,{'Set-Cookie':'an_admin=; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=0'});
+  }
+
   if (resource === 'products') {
     if (method === 'GET' && !idPart) return json(await listAll('products'));
-    if (!adminOnly(req)) return json({error:'Login required'},401);
+    if (!(await adminOnly(req))) return json({error:'Login required'},401);
     if (method === 'POST' && !idPart) {
       const id = await nextId('products');
       const row = {id, ...productValues(await readJson(req))};
       await s.setJSON(key('products',id),row); return json(row,201);
+    }
+    if (id && method === 'DELETE') {
+      const row = await s.get(key('orders',id),{type:'json'});
+      if (!row) return bad('Order not found',404);
+      await s.delete(key('orders',id));
+      return json({ok:true,deleted_id:id,deleted_total:num(row.total)});
     }
     if (id && method === 'PUT') {
       if (!(await s.get(key('products',id)))) return bad('Product not found',404);
@@ -174,7 +201,7 @@ export default async (req) => {
       try { email = await sendOrderEmail(row, 'placed'); } catch (e) { email = {sent:false, skipped:false, error:text(e.message)}; }
       return json({...row, email},201);
     }
-    if (!adminOnly(req)) return json({error:'Login required'},401);
+    if (!(await adminOnly(req))) return json({error:'Login required'},401);
     if (method === 'GET' && !idPart) return json((await listAll('orders')).reverse());
     if (id && method === 'PUT') {
       const d = await readJson(req), status = text(d.status) || 'Pending';
@@ -195,7 +222,7 @@ export default async (req) => {
   }
 
   if (resource === 'customers' && method === 'GET' && !idPart) {
-    if (!adminOnly(req)) return json({error:'Login required'},401);
+    if (!(await adminOnly(req))) return json({error:'Login required'},401);
     const groups = new Map();
     for (const o of await listAll('orders')) {
       if (!o.name) continue;
@@ -209,7 +236,7 @@ export default async (req) => {
 
   if (resource === 'settings' && !idPart) {
     if (method === 'GET') return json((await s.get('settings',{type:'json'})) || DEFAULT_SETTINGS);
-    if (!adminOnly(req)) return json({error:'Login required'},401);
+    if (!(await adminOnly(req))) return json({error:'Login required'},401);
     if (method === 'POST') {
       const d = await readJson(req);
       const row = {id:1,name:text(d.name)||DEFAULT_SETTINGS.name,tagline:text(d.tagline)||DEFAULT_SETTINGS.tagline,wa:text(d.wa),phone:text(d.phone),ig:text(d.ig),email:text(d.email),owner:text(d.owner),about_title:text(d.about_title)||DEFAULT_SETTINGS.about_title,about_text:text(d.about_text)||DEFAULT_SETTINGS.about_text,location:text(d.location),address:text(d.address),hours:text(d.hours)};
